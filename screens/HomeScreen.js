@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import Footer from '../components/Footer';
 
 export default function HomeScreen({ navigation }) {
   return (
@@ -8,6 +9,7 @@ export default function HomeScreen({ navigation }) {
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Quiz')}>
         <Text style={styles.buttonText}>Start the Quiz</Text>
       </TouchableOpacity>
+      <Footer />
     </View>
   );
 }
@@ -17,6 +19,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingBottom: 50,
   },
   titleText: {
     color: '#000',

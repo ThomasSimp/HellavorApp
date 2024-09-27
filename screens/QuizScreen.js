@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Text, Button, TouchableOpacity } from "react-native";
+import Footer from "../components/Footer";
 
 const questions = [
     {
@@ -16,6 +17,21 @@ const questions = [
         question: "What is the largest ocean on Earth?",
         options: ["Atlantic Ocean", "Indian Ocean", "Pacific Ocean", "Arctic Ocean"],
         correctAnswer: "Pacific Ocean",
+    },
+    {
+        question: "Is Lin Pyae Aung single?",
+        options: ["Yes", "No", "Yesn't", "Not sure"],
+        correctAnswer: "No",
+    },
+    {
+        question: "Is Paing Nyi Han handsome?",
+        options: ["Yes", "No", "Yesn't", "Not sure"],
+        correctAnswer: "Yes",
+    },
+    {
+        question: "Is Zay Nyi Han handsome?",
+        options: ["Yes", "No", "Yesn't", "Not sure"],
+        correctAnswer: "Yes",
     },
 ];
 
@@ -103,6 +119,8 @@ export default function QuizScreen() {
                     </View>
                 </View>
             )}
+
+            <Footer />
         </View>
     );
 }
