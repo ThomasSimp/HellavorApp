@@ -10,7 +10,7 @@ export default function SignupScreen({ navigation }) {
   const handleSignup = async () => {
     try {
       console.log('Sending signup request...'); // Debugging line
-      const response = await fetch('http://localhost:3000/signup', {
+      const response = await fetch('https://hellavorapp.onrender.com/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
