@@ -10,7 +10,7 @@ export default function LoginScreen({ navigation }) {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('https://hellavorapp.onrender.com/signup', {
+      const response = await fetch('https://fantastic-happiness-pj4564qp55cv96-3000.app.github.dev/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
