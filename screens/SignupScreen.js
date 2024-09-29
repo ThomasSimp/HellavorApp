@@ -4,13 +4,37 @@ import { View, TextInput, TouchableOpacity, Text, StyleSheet, Modal } from 'reac
 export default function SignupScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [verificationCode, setVerificationCode] = useState('');
+  const [isVerifying, setIsVerifying] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleSignup = async () => {
     try {
-      console.log('Sending signup request...'); // Debugging line
-      const response = await fetch('https://hellavorapp.onrender.com/signup', {
+      const response = await fetch('https://hellavorapp.onrender.com/send-verification', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+      
+      if (response.ok) {
+        setIsVerifying(true); // Proceed to verification step
+      } else {
+        const data = await response.json();
+        setErrorMessage(data.message || 'Failed to send verification email.');
+        setModalVisible(true);
+      }
+    } catch (error) {
+      setErrorMessage('Unable to send verification. Please try again later.');
+      setModalVisible(true);
+    }
+  };
+
+  const handleVerification = async () => {
+    try {
+      const response = await fetch('https://hellavorapp.onrender.com/verify-code', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -18,57 +42,60 @@ export default function SignupScreen({ navigation }) {
         body: JSON.stringify({
           email,
           password,
+          verificationCode,
         }),
       });
-      
-      const data = await response.json();
-      console.log('Response from server:', data); // Debugging line
-      
+
       if (response.ok) {
-        // Navigate to HomeScreen or handle success
-        console.log('User registered:', data);
         navigation.navigate('Home');
       } else {
-        // Handle error
-        console.log('Error registering:', data.message);
-        setErrorMessage(data.message || 'Signup failed. Please try again.'); // Set the error message
-        setModalVisible(true); // Show modal for error
+        const data = await response.json();
+        setErrorMessage(data.message || 'Verification failed.');
+        setModalVisible(true);
       }
     } catch (error) {
-      console.log('Error:', error);
-      setErrorMessage('Unable to register. Please try again later.');
-      setModalVisible(true); // Show modal for error
+      setErrorMessage('Unable to verify. Please try again later.');
+      setModalVisible(true);
     }
   };
 
   return (
     <View style={styles.container}>
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        style={styles.input}
-      />
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        style={styles.input}
-      />
-      <TouchableOpacity style={styles.button} onPress={handleSignup}>
-        <Text style={styles.buttonText}>Sign Up</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.linkText}>Already have an account? Log In</Text>
-      </TouchableOpacity>
+      {!isVerifying ? (
+        <>
+          <TextInput
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            style={styles.input}
+          />
+          <TouchableOpacity style={styles.button} onPress={handleSignup}>
+            <Text style={styles.buttonText}>Send Verification Code</Text>
+          </TouchableOpacity>
+        </>
+      ) : (
+        <>
+          <TextInput
+            placeholder="Enter Verification Code"
+            value={verificationCode}
+            onChangeText={setVerificationCode}
+            style={styles.input}
+          />
+          <TouchableOpacity style={styles.button} onPress={handleVerification}>
+            <Text style={styles.buttonText}>Verify & Sign Up</Text>
+          </TouchableOpacity>
+        </>
+      )}
 
       {/* Modal for Error Messages */}
-      <Modal
-        visible={modalVisible}
-        transparent={true}
-        animationType="slide"
-      >
+      <Modal visible={modalVisible} transparent={true} animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={styles.modalText}>{errorMessage}</Text>
