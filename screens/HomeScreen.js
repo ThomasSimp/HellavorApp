@@ -5,9 +5,9 @@ import Footer from '../components/Footer';
 
 export default function HomeScreen({ navigation, route }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(true); // State for modal visibility
+  const [isModalVisible, setIsModalVisible] = useState(true);
+  const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false); // State for logout confirmation modal
 
-  // Check if user is logged in via cookies on component mount
   useEffect(() => {
     const loggedInCookie = Cookies.get('isLoggedIn');
     if (loggedInCookie === 'true') {
@@ -15,14 +15,12 @@ export default function HomeScreen({ navigation, route }) {
     }
   }, []);
 
-  // Update login status if the LoginScreen passes back a successful login
   useEffect(() => {
     if (route.params?.isLoggedIn) {
       setIsLoggedIn(true);
     }
   }, [route.params?.isLoggedIn]);
 
-  // Function to accept cookies and hide the modal
   const acceptCookies = () => {
     setIsModalVisible(false);
   };
@@ -31,6 +29,11 @@ export default function HomeScreen({ navigation, route }) {
   const logout = () => {
     Cookies.remove('isLoggedIn'); // Remove the cookie
     setIsLoggedIn(false); // Update login state
+    setIsLogoutModalVisible(false); // Close the confirmation modal
+  };
+
+  const confirmLogout = () => {
+    setIsLogoutModalVisible(true); // Open confirmation modal
   };
 
   return (
@@ -41,7 +44,7 @@ export default function HomeScreen({ navigation, route }) {
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Quiz')}>
             <Text style={styles.buttonText}>Start the Quiz</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.logoutButton} onPress={logout}>
+          <TouchableOpacity style={styles.logoutButton} onPress={confirmLogout}>
             <Text style={styles.buttonText}>Log Out</Text>
           </TouchableOpacity>
         </>
@@ -74,6 +77,27 @@ export default function HomeScreen({ navigation, route }) {
           </View>
         </View>
       </Modal>
+
+      {/* Modal for Logout Confirmation */}
+      <Modal
+        visible={isLogoutModalVisible}
+        transparent={true}
+        animationType="slide"
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>Are you sure you want to log out?</Text>
+            <View style={styles.modalButtonContainer}>
+              <TouchableOpacity style={styles.modalButton} onPress={logout}>
+                <Text style={styles.modalButtonText}>Yes</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.modalButton} onPress={() => setIsLogoutModalVisible(false)}>
+                <Text style={styles.modalButtonText}>No</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -96,7 +120,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 5,
     marginVertical: 5,
-    width: '150px',
+    width: 150,
   },
   buttonText: {
     color: '#fff',
@@ -104,18 +128,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   logoutButton: {
-    backgroundColor: '#ff4d4d', // Red background for logout button
+    backgroundColor: 'rgba(255, 77, 77, 0.8)', // Semi-transparent red background for logout button
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
     marginVertical: 5,
-    width: '150px',
+    width: 150,
   },
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalContent: {
     width: 300,
@@ -129,12 +153,21 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   modalButton: {
+    width: '100%',
     backgroundColor: '#007bff',
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 5,
+    marginHorizontal: 5,
+    marginVertical: 5,
+  },
+  modalButtonContainer: {
+    flexDirection: 'column', // Stack buttons vertically
+    alignItems: 'center', // Center the buttons horizontally
+    width: '100%',
   },
   modalButtonText: {
     color: '#fff',
+    textAlign: 'center',
   },
 });
