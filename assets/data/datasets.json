@@ -1,0 +1,106 @@
+[
+    [
+        {
+            "question": "What is the capital of France?",
+            "options": ["Berlin", "Madrid", "Paris", "Rome"],
+            "correctAnswer": "Paris"
+        },
+        {
+            "question": "Which planet is known as the Red Planet?",
+            "options": ["Earth", "Mars", "Jupiter", "Venus"],
+            "correctAnswer": "Mars"
+        },
+        {
+            "question": "What is the capital of Japan?",
+            "options": ["Seoul", "Beijing", "Tokyo", "Bangkok"],
+            "correctAnswer": "Tokyo"
+        },
+        {
+            "question": "What is the currency of the USA?",
+            "options": ["Dollar", "Euro", "Yen", "Pound"],
+            "correctAnswer": "Dollar"
+        },
+        {
+            "question": "Which continent is known as the Dark Continent?",
+            "options": ["Asia", "Africa", "South America", "Australia"],
+            "correctAnswer": "Africa"
+        },
+        {
+            "question": "Who wrote 'Romeo and Juliet'?",
+            "options": ["Charles Dickens", "Jane Austen", "William Shakespeare", "Mark Twain"],
+            "correctAnswer": "William Shakespeare"
+        },
+        {
+            "question": "What is the boiling point of water?",
+            "options": ["100°C", "90°C", "80°C", "120°C"],
+            "correctAnswer": "100°C"
+        },
+        {
+            "question": "What gas do plants absorb from the atmosphere?",
+            "options": ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"],
+            "correctAnswer": "Carbon Dioxide"
+        },
+        {
+            "question": "Who painted the Mona Lisa?",
+            "options": ["Vincent Van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Claude Monet"],
+            "correctAnswer": "Leonardo da Vinci"
+        },
+        {
+            "question": "Which is the largest planet in our Solar System?",
+            "options": ["Earth", "Mars", "Jupiter", "Saturn"],
+            "correctAnswer": "Jupiter"
+        }
+    ],
+    [
+        {
+            "question": "What is the largest ocean on Earth?",
+            "options": ["Atlantic Ocean", "Indian Ocean", "Pacific Ocean", "Arctic Ocean"],
+            "correctAnswer": "Pacific Ocean"
+        },
+        {
+            "question": "Is Lin Pyae Aung single?",
+            "options": ["Yes", "No", "Yesn't", "Not sure"],
+            "correctAnswer": "No"
+        },
+        {
+            "question": "What is the capital of Australia?",
+            "options": ["Sydney", "Melbourne", "Canberra", "Brisbane"],
+            "correctAnswer": "Canberra"
+        },
+        {
+            "question": "What is the longest river in the world?",
+            "options": ["Amazon River", "Nile River", "Yangtze River", "Mississippi River"],
+            "correctAnswer": "Nile River"
+        },
+        {
+            "question": "Who is known as the Father of Modern Physics?",
+            "options": ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Stephen Hawking"],
+            "correctAnswer": "Albert Einstein"
+        },
+        {
+            "question": "Which element has the chemical symbol 'O'?",
+            "options": ["Gold", "Oxygen", "Silver", "Iron"],
+            "correctAnswer": "Oxygen"
+        },
+        {
+            "question": "What is the capital of Canada?",
+            "options": ["Toronto", "Vancouver", "Ottawa", "Montreal"],
+            "correctAnswer": "Ottawa"
+        },
+        {
+            "question": "What is the main ingredient in guacamole?",
+            "options": ["Tomato", "Onion", "Avocado", "Pepper"],
+            "correctAnswer": "Avocado"
+        },
+        {
+            "question": "Which planet is known for its rings?",
+            "options": ["Mars", "Earth", "Saturn", "Neptune"],
+            "correctAnswer": "Saturn"
+        },
+        {
+            "question": "What is the hardest natural substance on Earth?",
+            "options": ["Gold", "Iron", "Diamond", "Quartz"],
+            "correctAnswer": "Diamond"
+        }
+    ]
+]

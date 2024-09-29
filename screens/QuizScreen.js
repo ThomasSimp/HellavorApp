@@ -1,68 +1,53 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, Button, TouchableOpacity } from "react-native";
 import Footer from "../components/Footer";
-
-const questions = [
-    {
-        question: "What is the capital of France?",
-        options: ["Berlin", "Madrid", "Paris", "Rome"],
-        correctAnswer: "Paris",
-    },
-    {
-        question: "Which planet is known as the Red Planet?",
-        options: ["Earth", "Mars", "Jupiter", "Venus"],
-        correctAnswer: "Mars",
-    },
-    {
-        question: "What is the largest ocean on Earth?",
-        options: ["Atlantic Ocean", "Indian Ocean", "Pacific Ocean", "Arctic Ocean"],
-        correctAnswer: "Pacific Ocean",
-    },
-    {
-        question: "Is Lin Pyae Aung single?",
-        options: ["Yes", "No", "Yesn't", "Not sure"],
-        correctAnswer: "No",
-    },
-    {
-        question: "Is Paing Nyi Han handsome?",
-        options: ["Yes", "No", "Yesn't", "Not sure"],
-        correctAnswer: "Yes",
-    },
-    {
-        question: "Is Zay Nyi Han handsome?",
-        options: ["Yes", "No", "Yesn't", "Not sure"],
-        correctAnswer: "Yes",
-    },
-];
+import datasets from "../assets/data/datasets.json";
 
 export default function QuizScreen() {
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
     const [score, setScore] = useState(0);
     const [isQuizFinished, setIsQuizFinished] = useState(false);
-    const [userAnswers, setUserAnswers] = useState([]); // Track user answers
+    const [userAnswers, setUserAnswers] = useState([]);
+    const [selectedDataset, setSelectedDataset] = useState(null);
+
+    // Function to select a random dataset
+    const selectRandomDataset = () => {
+        const randomIndex = Math.floor(Math.random() * datasets.length);
+        setSelectedDataset(datasets[randomIndex]);
+        setCurrentQuestion(0); // Reset to the first question
+        setScore(0); // Reset score
+        setUserAnswers([]); // Clear previous answers
+        setIsQuizFinished(false); // Reset quiz finished state
+    };
+
+    useEffect(() => {
+        selectRandomDataset(); // Select a random dataset on mount
+    }, []);
 
     const handleNextQuestion = () => {
-        // Record user's answer and whether it was correct
-        const correct = selectedOption === questions[currentQuestion].correctAnswer;
-        setUserAnswers([...userAnswers, { 
-            question: questions[currentQuestion].question,
-            selectedOption,
-            correct,
-            correctAnswer: questions[currentQuestion].correctAnswer 
-        }]);
+        if (!selectedDataset) return;
 
-        // Update score if the answer was correct
+        const correct = selectedOption === selectedDataset[currentQuestion].correctAnswer;
+        setUserAnswers([
+            ...userAnswers,
+            {
+                question: selectedDataset[currentQuestion].question,
+                selectedOption,
+                correct,
+                correctAnswer: selectedDataset[currentQuestion].correctAnswer,
+            },
+        ]);
+
         if (correct) {
             setScore(score + 1);
         }
 
-        // Move to next question or finish quiz
-        if (currentQuestion < questions.length - 1) {
+        if (currentQuestion < selectedDataset.length - 1) {
             setCurrentQuestion(currentQuestion + 1);
-            setSelectedOption(null); // Reset selected option for the next question
+            setSelectedOption(null);
         } else {
-            setIsQuizFinished(true); // End the quiz
+            setIsQuizFinished(true);
         }
     };
 
@@ -70,19 +55,31 @@ export default function QuizScreen() {
         setSelectedOption(option);
     };
 
+    const handleRetryQuiz = () => {
+        selectRandomDataset(); // Restart the quiz with a new dataset
+    };
+
+    if (!selectedDataset) {
+        return <Text>Loading...</Text>;
+    }
+
     return (
         <View style={styles.container}>
             {isQuizFinished ? (
                 <View style={styles.resultContainer}>
-                    <Text style={styles.resultText}>Quiz Finished! Your score: {score}/{questions.length}</Text>
+                    <Text style={styles.resultText}>
+                        Quiz Finished! Your score: {score}/{selectedDataset.length}
+                    </Text>
                     <Text style={styles.reviewText}>Review your answers:</Text>
                     {userAnswers.map((answer, index) => (
                         <View key={index} style={styles.reviewContainer}>
                             <Text style={styles.reviewQuestionText}>{answer.question}</Text>
-                            <Text style={[
-                                styles.answerText,
-                                answer.correct ? styles.correctAnswer : styles.incorrectAnswer
-                            ]}>
+                            <Text
+                                style={[
+                                    styles.answerText,
+                                    answer.correct ? styles.correctAnswer : styles.incorrectAnswer,
+                                ]}
+                            >
                                 Your answer: {answer.selectedOption}
                             </Text>
                             {!answer.correct && (
@@ -92,12 +89,15 @@ export default function QuizScreen() {
                             )}
                         </View>
                     ))}
+                    <Button title="Retry Quiz" onPress={handleRetryQuiz} />
                 </View>
             ) : (
                 <View style={styles.quizContainer}>
-                    <Text style={styles.questionText}>{questions[currentQuestion].question}</Text>
+                    <Text style={styles.questionText}>
+                        {selectedDataset[currentQuestion].question}
+                    </Text>
                     <View style={styles.optionsContainer}>
-                        {questions[currentQuestion].options.map((option, index) => (
+                        {selectedDataset[currentQuestion].options.map((option, index) => (
                             <TouchableOpacity
                                 key={index}
                                 style={[
@@ -111,10 +111,18 @@ export default function QuizScreen() {
                         ))}
                     </View>
                     <View style={styles.buttonContainer}>
-                        {currentQuestion < questions.length - 1 ? (
-                            <Button title="Next" onPress={handleNextQuestion} disabled={!selectedOption} />
+                        {currentQuestion < selectedDataset.length - 1 ? (
+                            <Button
+                                title="Next"
+                                onPress={handleNextQuestion}
+                                disabled={!selectedOption}
+                            />
                         ) : (
-                            <Button title="Submit" onPress={handleNextQuestion} disabled={!selectedOption} />
+                            <Button
+                                title="Submit"
+                                onPress={handleNextQuestion}
+                                disabled={!selectedOption}
+                            />
                         )}
                     </View>
                 </View>
@@ -160,8 +168,8 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     resultContainer: {
-        alignItems: "flex-start", // Align text to the left
-        width: '100%', // Full width for proper alignment
+        alignItems: "flex-start",
+        width: '100%',
         padding: 16,
     },
     resultText: {
@@ -169,7 +177,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "green",
         marginBottom: 20,
-        textAlign: "center", // Center the main result text
+        textAlign: "center",
         width: "100%",
     },
     reviewText: {
