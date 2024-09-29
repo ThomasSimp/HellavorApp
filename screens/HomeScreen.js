@@ -6,34 +6,40 @@ import Footer from '../components/Footer';
 export default function HomeScreen({ navigation, route }) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(true);
-  const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false); // State for logout confirmation modal
+  const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
+  const [email, setEmail] = useState(''); // State to store user's email
+  const [showDropdown, setShowDropdown] = useState(false); // State to toggle profile dropdown
 
   useEffect(() => {
     const loggedInCookie = Cookies.get('isLoggedIn');
+    const userEmail = Cookies.get('email'); // Retrieve email from cookies
     if (loggedInCookie === 'true') {
       setIsLoggedIn(true);
+      setEmail(userEmail); // Set email from cookie
     }
   }, []);
 
   useEffect(() => {
     if (route.params?.isLoggedIn) {
       setIsLoggedIn(true);
+      setEmail(route.params.email); // Assume the email is passed via route params when logging in
     }
-  }, [route.params?.isLoggedIn]);
+  }, [route.params?.isLoggedIn, route.params?.email]);
 
   const acceptCookies = () => {
     setIsModalVisible(false);
   };
 
-  // Function to log out the user
   const logout = () => {
-    Cookies.remove('isLoggedIn'); // Remove the cookie
-    setIsLoggedIn(false); // Update login state
-    setIsLogoutModalVisible(false); // Close the confirmation modal
+    Cookies.remove('isLoggedIn');
+    Cookies.remove('email'); // Remove email cookie on logout
+    setIsLoggedIn(false);
+    setIsLogoutModalVisible(false);
+    setShowDropdown(false); // Hide dropdown on logout
   };
 
   const confirmLogout = () => {
-    setIsLogoutModalVisible(true); // Open confirmation modal
+    setIsLogoutModalVisible(true);
   };
 
   return (
@@ -41,11 +47,20 @@ export default function HomeScreen({ navigation, route }) {
       <Text style={styles.titleText}>Hellavor</Text>
       {isLoggedIn ? (
         <>
+          <View style={styles.profileContainer}>
+            <TouchableOpacity onPress={() => setShowDropdown(!showDropdown)} style={styles.profileButton}>
+              <Text style={styles.profileText}>👤 {email}</Text>
+            </TouchableOpacity>
+            {showDropdown && (
+              <View style={styles.dropdownMenu}>
+                <TouchableOpacity style={styles.dropdownItem} onPress={confirmLogout}>
+                  <Text style={styles.dropdownText}>Log Out</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Quiz')}>
             <Text style={styles.buttonText}>Start the Quiz</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.logoutButton} onPress={confirmLogout}>
-            <Text style={styles.buttonText}>Log Out</Text>
           </TouchableOpacity>
         </>
       ) : (
@@ -127,13 +142,51 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
   },
-  logoutButton: {
-    backgroundColor: 'rgba(255, 77, 77, 0.8)', // Semi-transparent red background for logout button
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+  profileContainer: {
+    position: 'absolute', // Set the position to absolute
+    top: 50, // Adjust this value to position it from the top
+    right: 20, // Align to the right
+  },
+  profileButton: {
+    backgroundColor: '#f1f1f1',
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 1 },
+    shadowRadius: 5,
+    elevation: 5, // For Android shadow
+  },
+  profileText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  dropdownMenu: {
+    backgroundColor: '#fff',
+    padding: 10,
     borderRadius: 5,
-    marginVertical: 5,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    position: 'absolute',
+    top: 50,
+    right: 0,
     width: 150,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 5,
+    elevation: 5, // Android shadow
+  },
+  dropdownItem: {
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+  },
+  dropdownText: {
+    fontSize: 16,
+    color: '#007bff',
   },
   modalContainer: {
     flex: 1,
@@ -162,8 +215,8 @@ const styles = StyleSheet.create({
     marginVertical: 5,
   },
   modalButtonContainer: {
-    flexDirection: 'column', // Stack buttons vertically
-    alignItems: 'center', // Center the buttons horizontally
+    flexDirection: 'column',
+    alignItems: 'center',
     width: '100%',
   },
   modalButtonText: {

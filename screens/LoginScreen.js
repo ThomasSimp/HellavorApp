@@ -19,12 +19,13 @@ export default function LoginScreen({ navigation }) {
       });
 
       if (response.ok) {
-        // Set cookie to last for 1 minute (60 seconds)
+        // Set cookie for login state and email
         Cookies.set('isLoggedIn', 'true', { expires: 1 / 1440 });
-
-        // Handle successful login and navigate to Home
+        Cookies.set('email', email, { expires: 1 / 1440 }); // Save email in cookies
+      
+        // Handle successful login and navigate to Home with email
         Alert.alert('Success', 'Login successful');
-        navigation.navigate('Home', { isLoggedIn: true });
+        navigation.navigate('Home', { isLoggedIn: true, email });
       } else if (response.status === 401) {
         setErrorMessage('Invalid email or password.');
         setModalVisible(true); // Show modal for invalid credentials
