@@ -27,13 +27,24 @@ export default function HomeScreen({ navigation, route }) {
     setIsModalVisible(false);
   };
 
+  // Function to log out the user
+  const logout = () => {
+    Cookies.remove('isLoggedIn'); // Remove the cookie
+    setIsLoggedIn(false); // Update login state
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.titleText}>Hellavor</Text>
       {isLoggedIn ? (
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Quiz')}>
-          <Text style={styles.buttonText}>Start the Quiz</Text>
-        </TouchableOpacity>
+        <>
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Quiz')}>
+            <Text style={styles.buttonText}>Start the Quiz</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.logoutButton} onPress={logout}>
+            <Text style={styles.buttonText}>Log Out</Text>
+          </TouchableOpacity>
+        </>
       ) : (
         <>
           <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Login')}>
@@ -91,6 +102,14 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     textAlign: 'center',
+  },
+  logoutButton: {
+    backgroundColor: '#ff4d4d', // Red background for logout button
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginVertical: 5,
+    width: '150px',
   },
   modalContainer: {
     flex: 1,

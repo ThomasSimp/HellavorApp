@@ -84,6 +84,38 @@ app.post('/verify-code', async (req, res) => {
   }
 });
 
+// Login endpoint
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+  
+    try {
+      // Check if user exists in the database
+      const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+      
+      if (result.rows.length === 0) {
+        // User not found
+        return res.status(401).json({ message: 'Invalid email or password' });
+      }
+  
+      const user = result.rows[0];
+      
+      // Compare the provided password with the stored hashed password
+      const passwordMatch = await bcrypt.compare(password, user.password);
+      
+      if (!passwordMatch) {
+        // Invalid password
+        return res.status(401).json({ message: 'Invalid email or password' });
+      }
+  
+      // If login is successful, send a success message
+      res.status(200).json({ message: 'Login successful', user: { email: user.email } });
+  
+    } catch (error) {
+      console.error('Error logging in:', error);
+      res.status(500).json({ message: 'Error logging in' });
+    }
+});  
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
