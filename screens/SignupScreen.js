@@ -77,7 +77,7 @@ export default function SignupScreen({ navigation }) {
             style={styles.input}
           />
           <TouchableOpacity style={styles.button} onPress={handleSignup}>
-            <Text style={styles.buttonText}>Send Verification Code</Text>
+            <Text style={styles.buttonText}>Sign Up</Text>
           </TouchableOpacity>
         </>
       ) : (
