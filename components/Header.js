@@ -8,3 +8,5 @@ export default function Header() {
     </View>
   );
 }
+
+// TODO: Delete the file since it's longer needed.
