@@ -56,7 +56,7 @@ export default function QuizScreen() {
     };
 
     const handleRetryQuiz = () => {
-        selectRandomDataset(); // Restart the quiz with a new dataset
+        selectRandomDataset();
     };
 
     if (!selectedDataset) {
